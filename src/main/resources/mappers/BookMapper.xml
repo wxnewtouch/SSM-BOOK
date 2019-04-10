@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.BookMapper">
+    <cache type="com.ssm.redis.RedisCache"/>
+    <!--新增记录-->
+    <insert id="insertBook" parameterType= "Book">
+        insert into book (book_id, name, number, detail)
+        values
+        (
+            #{bookId}
+            ,
+            #{name}
+            ,
+            #{number}
+            ,
+            #{detail}
+        )
+    </insert>
+    <!--更新记录-->
+    <!--<update id="updateBook" parameterType="Book">-->
+        <!--update book-->
+        <!--<trim prefix="set" suffixOverrides=",">-->
+            <!--<if test="name != null">name = #{name},</if>-->
+            <!--<if test="number != null"> number = #{number},</if>-->
+            <!--<if test="detail != null">detail = #{detail},</if>-->
+        <!--</trim>-->
+        <!--where book_id = #{bookId}-->
+        <!--and number > 0-->
+    <!--</update>-->
+    <!--删除记录-->
+    <delete id="deleteBook" parameterType="Book">
+        delete from book where book_id =  #{bookId}
+    </delete>
+    <resultMap id="BookResult" type="Book">
+        <id column="book_id" property="bookId" />
+    </resultMap>
+    <!--根据主键查找记录-->
+    <select id="queryById" resultMap="BookResult">
+        select
+            book_id,
+            name,
+            number,
+            detail
+        from book
+        where book_id = #{id}
+    </select>
+    <!--查找全部-->
+    <select id="queryAll" resultType="Book">
+        select * from book limit #{offset},#{limit}
+    </select>
+    <!--查找总记录数-->
+    <select id="countNum" resultType="java.lang.Integer">
+        select count(1) from book;
+    </select>
+</mapper>
